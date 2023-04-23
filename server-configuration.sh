@@ -34,8 +34,16 @@ sudo systemctl status xrdp
 sudo adduser xrdp ssl-cert
 sudo systemctl restart xrdp
 
-# git
-sudo apt install git 
+# git 
+sudo apt update
+sudo apt install git
+
+# github desktop
+# https://github.com/shiftkey/desktop
+# sudo apt install github-desktop
+sudo wget https://github.com/shiftkey/desktop/releases/download/release-3.2.1-linux1/GitHubDesktop-linux-3.2.1-linux1.deb
+sudo gdebi GitHubDesktop-linux-3.2.1-linux1.deb -y
+rm GitHubDesktop-linux-3.2.1-linux1.deb
 
 ################################################################
 
