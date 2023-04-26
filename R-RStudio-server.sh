@@ -15,6 +15,7 @@ sudo apt-get install libgdal-dev libgeos-dev libproj-dev -y
 sudo apt-get install libgmp-dev -y
 sudo apt-get install libmpfr-dev -y
 sudo apt-get install libclang-dev -y
+sudo apt-get install cmake -y
 
 # R
 sudo apt-get update -y
