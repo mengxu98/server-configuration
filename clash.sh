@@ -5,8 +5,13 @@ gunzip clash-linux-amd64-2023.04.16.gz
 mkdir /home/mengxu/clash
 sudo mv clash-linux-amd64-2023.04.16 /home/mengxu/clash/clash
 sudo chmod +x /home/mengxu/clash/clash
+cd /home/mengxu/
 ./clash/clash
+
 # Then close clash and modify configuration file '.yaml'
+# sudo vim ~/.config/clash/config.yaml
+
+# Auto
 # And write following test into a script file 'clash.sh':
     # echo "123123"|sudo -S modprobe gs_usb
     # # sudo iptables -F
