@@ -31,4 +31,5 @@ sudo apt-get install gdebi-core -y
 wget https://download2.rstudio.org/server/bionic/amd64/rstudio-server-2023.03.0-386-amd64.deb
 sudo gdebi rstudio-server-2023.03.0-386-amd64.deb -n
 rstudio-server version
+rstudio-server restart
 rm rstudio-server-2023.03.0-386-amd64.deb
