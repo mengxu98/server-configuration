@@ -16,6 +16,7 @@ sudo apt-get install libgmp-dev -y
 sudo apt-get install libmpfr-dev -y
 sudo apt-get install libclang-dev -y
 sudo apt-get install cmake -y
+sudo apt-get install libmagick++-dev -y
 
 # R
 sudo apt-get update -y
