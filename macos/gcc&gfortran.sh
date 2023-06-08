@@ -1,4 +1,5 @@
-# Reference: https://blog.csdn.net/weixin_64343528/article/details/123740406
+# Reference1: https://thecoatlessprofessor.com/programming/cpp/r-compiler-tools-for-rcpp-on-macos/
+# Reference2: https://blog.csdn.net/weixin_64343528/article/details/123740406
 brew install gcc
 brew list gcc
 # Output in the terminal on my machine, a m2 macmini
