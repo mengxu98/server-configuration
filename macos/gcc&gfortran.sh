@@ -41,4 +41,20 @@ vim Makevars
     # CXX=g++$(VER)
     # CFLAGS=-mtune=native -g -O2 -Wall -pedantic -Wconversion
     # CXXFLAGS=-mtune=native -g -O2 -Wall -pedantic -Wconversion
-    # FLIBS=-L/usr/local/Cellar/gcc/13.1.0/lib/gcc/13
+    # FLIBS=-L/opt/homebrew/Cellar/gcc/13.1.0/lib/gcc/13
+
+    # # If you counter other problems may be could solve them using following lines
+    # # Reference3: https://shwilks.github.io/Racmacs/index.html
+    # # CC=/usr/local/gfortran/bin/gcc
+    # # CXX=/usr/local/gfortran/bin/g++
+    # # CXX1X=/usr/local/gfortran/bin/g++
+    # # CXX11=/usr/local/gfortran/bin/g++
+    # SHLIB_CXXLD=/usr/local/gfortran/bin/g++
+    # FC=/usr/local/gfortran/bin/gfortran
+    # F77=/usr/local/gfortran/bin/gfortran
+    # MAKE=make -j8
+
+    # SHLIB_OPENMP_CFLAGS=-fopenmp
+    # SHLIB_OPENMP_CXXFLAGS=-fopenmp
+    # SHLIB_OPENMP_FCFLAGS=-fopenmp
+    # SHLIB_OPENMP_FFLAGS=-fopenmp
