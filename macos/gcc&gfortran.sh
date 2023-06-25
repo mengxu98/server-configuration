@@ -37,7 +37,8 @@ cd ~/.R
 vim Makevars
 # Then paste following text, note the value setting of 'VER' and 'FLIBS' must consistent ref gcc list
     # VER=-13
-    # CC=gcc$(VER)
+    # # CC=gcc$(VER)
+    # CC=/usr/local/gfortran/bin/gcc
     # CXX=g++$(VER)
     # CFLAGS=-mtune=native -g -O2 -Wall -pedantic -Wconversion
     # CXXFLAGS=-mtune=native -g -O2 -Wall -pedantic -Wconversion
