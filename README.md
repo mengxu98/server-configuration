@@ -26,3 +26,9 @@ bash clash.sh
 ``` bash
 bash GEO_data_download.sh GEO_ID
 ```
+
+### If you want to use [*tabby*](https://github.com/eugeny/tabby) terminal instead of the default terminal
+
+```bash
+bash tabby_installation.sh
+```
