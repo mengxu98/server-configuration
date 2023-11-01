@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "123123"|sudo -S modprobe gs_usb # 123123 is your system password
 # sudo iptables -F
 

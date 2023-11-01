@@ -1,134 +1,5 @@
 #!/bin/bash
 
-install_dependence() {
-  # Function to install packages for Debian/Ubuntu systems
-  install_ubuntu_packages() {
-      required_packages=(
-          libcurl4-openssl-dev
-          libxml2-dev
-          libfontconfig1-dev
-          libharfbuzz-dev
-          libfribidi-dev
-          libfreetype6-dev
-          libpng-dev
-          libtiff5-dev
-          libjpeg-dev
-          libgdal-dev
-          libgeos-dev
-          libproj-dev
-          libgmp-dev
-          libmpfr-dev
-          libclang-dev
-          cmake
-          libmagick++-dev
-      )
-  
-      for package in "${required_packages[@]}"; do
-          if ! dpkg -l | grep -q "ii  $package"; then
-              echo "Installing $package......"
-              apt-get install -y "$package"
-          else
-              echo "$package is already installed......"
-          fi
-      done
-  }
-  
-  # Function to install packages for Red Hat/CentOS/Fedora systems
-  install_redhat_packages() {
-      required_packages=(
-          libcurl-devel
-          libxml2-devel
-          fontconfig-devel
-          harfbuzz-devel
-          fribidi-devel
-          freetype-devel
-          libpng-devel
-          libtiff-devel
-          libjpeg-devel
-          gdal-devel
-          geos-devel
-          proj-devel
-          gmp-devel
-          mpfr-devel
-          clang-devel
-          cmake
-          ImageMagick-c++-devel
-      )
-  
-      wget http://security.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.19_amd64.deb
-      dpkg -i  libssl1.1_1.1.1f-1ubuntu2.19_amd64.deb
-      rm libssl1.1_1.1.1f-1ubuntu2.17_amd64.deb
-      
-      for package in "${required_packages[@]}"; do
-          if ! rpm -q "$package" &>/dev/null; then
-              echo "Installing $package......"
-              yum install -y "$package"
-          else
-              echo "$package is already installed......"
-          fi
-      done
-  }
-  
-  # Function to install packages for Arch Linux
-  install_arch_packages() {
-      required_packages=(
-          curl
-          libxml2
-          fontconfig
-          harfbuzz
-          libfreetype2
-          libpng
-          libtiff
-          libjpeg-turbo
-          gdal
-          geos
-          proj
-          gmp
-          mpfr
-          clang
-          cmake
-          imagemagick
-      )
-  
-      for package in "${required_packages[@]}"; do
-          if ! pacman -Q "$package" &>/dev/null; then
-              echo "Installing $package..."
-              pacman -S --noconfirm "$package"
-          else
-              echo "$package is already installed......"
-          fi
-      done
-  }
-  
-  # Detect the Linux distribution and call the appropriate function
-  if [ -f /etc/os-release ]; then
-      source /etc/os-release
-      case $ID in
-          debian|ubuntu)
-              echo "Detected Debian/Ubuntu system......"
-              install_ubuntu_packages
-              ;;
-          fedora|centos|rhel)
-              echo "Detected Red Hat/CentOS/Fedora system......"
-              install_redhat_packages
-              ;;
-          arch)
-              echo "Detected Arch Linux system......"
-              install_arch_packages
-              ;;
-          *)
-              echo "Unsupported Linux distribution: $ID"
-              exit 1
-              ;;
-      esac
-  else
-      echo "Unsupported operating system......"
-      exit 1
-  fi
-  
-  echo "All required packages installed successfully......"
-}
-
 # Function to install R if it doesn't already exist
 install_r() {
     # Check if R is already installed
@@ -139,7 +10,7 @@ install_r() {
     fi
 
     echo "Installing R......"
-    
+
     # Get the system information
     os=$(uname -s)
 
@@ -195,6 +66,145 @@ install_r() {
         echo "R installation failed......"
         exit 1
     fi
+}
+
+# Function to check if R is installed
+check_r_packages_installed() {
+    if command -v R >/dev/null 2>&1; then
+        echo "R is already installed......"
+    else
+        echo "R is not installed......"
+        install_r
+    fi
+}
+
+install_dependence() {
+  # Function to install packages for Debian/Ubuntu systems
+  install_ubuntu_packages() {
+      required_packages=(
+          libcurl4-openssl-dev
+          libxml2-dev
+          libfontconfig1-dev
+          libharfbuzz-dev
+          libfribidi-dev
+          libfreetype6-dev
+          libpng-dev
+          libtiff5-dev
+          libjpeg-dev
+          libgdal-dev
+          libgeos-dev
+          libproj-dev
+          libgmp-dev
+          libmpfr-dev
+          libclang-dev
+          cmake
+          libmagick++-dev
+      )
+
+      for package in "${required_packages[@]}"; do
+          if ! dpkg -l | grep -q "ii  $package"; then
+              echo "Installing $package......"
+              apt-get install -y "$package"
+          else
+              echo "$package is already installed......"
+          fi
+      done
+  }
+
+  # Function to install packages for Red Hat/CentOS/Fedora systems
+  install_redhat_packages() {
+      required_packages=(
+          libcurl-devel
+          libxml2-devel
+          fontconfig-devel
+          harfbuzz-devel
+          fribidi-devel
+          freetype-devel
+          libpng-devel
+          libtiff-devel
+          libjpeg-devel
+          gdal-devel
+          geos-devel
+          proj-devel
+          gmp-devel
+          mpfr-devel
+          clang-devel
+          cmake
+          ImageMagick-c++-devel
+      )
+
+      wget http://security.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.19_amd64.deb
+      dpkg -i  libssl1.1_1.1.1f-1ubuntu2.19_amd64.deb
+      rm libssl1.1_1.1.1f-1ubuntu2.17_amd64.deb
+
+      for package in "${required_packages[@]}"; do
+          if ! rpm -q "$package" &>/dev/null; then
+              echo "Installing $package......"
+              yum install -y "$package"
+          else
+              echo "$package is already installed......"
+          fi
+      done
+  }
+
+  # Function to install packages for Arch Linux
+  install_arch_packages() {
+      required_packages=(
+          curl
+          libxml2
+          fontconfig
+          harfbuzz
+          libfreetype2
+          libpng
+          libtiff
+          libjpeg-turbo
+          gdal
+          geos
+          proj
+          gmp
+          mpfr
+          clang
+          cmake
+          imagemagick
+      )
+
+      for package in "${required_packages[@]}"; do
+          if ! pacman -Q "$package" &>/dev/null; then
+              echo "Installing $package..."
+              pacman -S --noconfirm "$package"
+          else
+              echo "$package is already installed......"
+          fi
+      done
+  }
+
+  # Detect the Linux distribution and call the appropriate function
+  if [ -f /etc/os-release ]; then
+      source /etc/os-release
+      case $ID in
+          debian|ubuntu)
+              echo "Detected Debian/Ubuntu system......"
+              install_ubuntu_packages
+              ;;
+          fedora|centos|rhel)
+              echo "Detected Red Hat/CentOS/Fedora system......"
+              install_redhat_packages
+              ;;
+          arch)
+              echo "Detected Arch Linux system......"
+              install_arch_packages
+              ;;
+          *)
+              echo "Unsupported Linux distribution: $ID"
+              exit 1
+              ;;
+      esac
+  else
+      echo "Unsupported operating system......"
+      exit 1
+  fi
+
+  echo "All required packages installed successfully......"
 }
 
 # Function to install RStudio Server if not already installed
@@ -271,16 +281,27 @@ install_packages() {
         Rscript -e "if (!require($1, quietly = TRUE)) quit(save = 'no', status = 1)"
     }
 
+    # # Install 'stringi'
+    # if is_package_installed "stringi"; then
+    #     echo "'stringi' is already installed......"
+    # else
+    #     echo "Installing stringi......"
+    #     git clone https://github.com/gagolews/stringi.git
+    #     cd stringi
+    #     R CMD INSTALL .
+    # fi
+    
+    cd ..
+
     # List of required packages
     required_packages=(
         "BiocManager"
-        "doSNOW"
+        "data.table"
         "doParallel"
         "parallel"
         "dplyr"
         "foreach"
         "igraph"
-        "magritte"
         "patchwork"
         "progress"
         "purrr"
@@ -289,15 +310,15 @@ install_packages() {
         "ggplot2"
         "ggraph"
         "RcppArmadillo"
-        "cowplot"
         "gtools"
         "circlize"
         "precrec"
-        "magrittr"
         "tidygraph"
+        "pROC"
+        "spelling"
     )
 
-    # Install 'devtools' using BiocManager
+    # Install 'devtools'
     if is_package_installed "devtools"; then
         echo "'devtools' is already installed......"
     else
@@ -305,8 +326,8 @@ install_packages() {
         Rscript -e "install.packages("devtools", repos = 'https://cloud.r-project.org')"
     fi
 
-    # Install 'digest' using BiocManager
-  	# Note: the package 'digest' may cause errors during the installation process on the macOS system
+    # Install 'digest'
+  	# Note: the package 'digest' may encounter errors during the installation process on the macOS system of M1/M2 chip machines
     if is_package_installed "digest"; then
         echo "'digest' is already installed......"
     else
@@ -333,16 +354,6 @@ install_packages() {
     fi
 
     echo "Required packages installation complete."
-}
-
-# Function to check if R is installed
-check_r_packages_installed() {
-    if command -v R >/dev/null 2>&1; then
-        echo "R is already installed......"
-    else
-        echo "R is not installed......"
-        install_r
-    fi
 }
 
 # Running
