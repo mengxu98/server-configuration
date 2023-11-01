@@ -4,12 +4,12 @@
 install_r() {
     # Check if R is already installed
     if command -v R >/dev/null 2>&1; then
-        echo "R is already installed......"
-        echo "Skipping installation......"
+        echo "R is already installed."
+        echo "Skipping installation."
         return
     fi
 
-    echo "Installing R......"
+    echo "Installing R."
 
     # Get the system information
     os=$(uname -s)
@@ -19,35 +19,66 @@ install_r() {
         Linux*)
             if [ -f /etc/lsb-release ]; then
                 # Ubuntu system
-                echo "Ubuntu system......"
-                apt-get update
-                apt-get install -y r-base
+                echo "Ubuntu system."
+                # apt-get update
+                # apt-get install -y r-base
+
+                # Reference: https://cloud.r-project.org/
+                # update indices
+                apt update -qq
+                # install two helper packages need
+                apt install --no-install-recommends software-properties-common dirmngr
+                # add the signing key (by Michael Rutter) for these repos
+                # To verify key, run gpg --show-keys /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc 
+                # Fingerprint: E298A3A825C0D65DFD57CBB651716619E084DAB9
+                wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
+                # add the R 4.0 repo from CRAN -- adjust 'focal' to 'groovy' or 'bionic' as needed
+                add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
+
+                # install R and its dependencies
+                apt install --no-install-recommends r-base
+
+                # Run this command to add the current R 4.0 or later ‘c2d4u’ repository:
+                add-apt-repository ppa:c2d4u.team/c2d4u4.0+
+
             elif [ -f /etc/debian_version ]; then
                 # Debian system
-                echo "Debian system......"
-                apt-get update
-                apt-get install -y r-base
-            elif [ -f /etc/gentoo-release ]; then
-                # Gentoo system
-                echo "Gentoo system......"
-                emerge --ask dev-lang/R
+                echo "Debian system."
+                # apt-get update
+                # apt-get install -y r-base
+
+                # Reference: https://cloud.r-project.org/
+                apt search "^r-.*" | sort
+                apt update
+                apt install r-base r-base-dev
+                apt rdepends r-base-core
+
             elif [ -f /etc/fedora-release ]; then
                 # Fedora system
-                echo "Fedora system......"
+                echo "Fedora system."
                 dnf install -y R
+
             elif [ -f /etc/arch-release ]; then
                 # Arch Linux system
-                echo "Arch Linux system......"
+                echo "Arch Linux system."
                 pacman -S --noconfirm r
+
             elif [ -f /etc/SuSE-release ] || [ -f /etc/openSUSE-release ]; then
                 # OpenSuse system
-                echo "OpenSuse system......"
+                echo "OpenSuse system."
                 zypper --non-interactive in -y R
+
             elif [ -f /etc/centos-release ]; then
                 # CentOS system
-                echo "CentOS system......"
+                echo "CentOS system."
                 yum install -y epel-release
                 yum install -y R
+            
+            elif [ -f /etc/gentoo-release ]; then
+                # Gentoo system
+                echo "Gentoo system."
+                emerge --ask dev-lang/R
+
             else
                 echo "Unsupported Linux distribution."
                 exit 1
@@ -61,9 +92,10 @@ install_r() {
 
     # Check if R was installed successfully
     if [ $? -eq 0 ]; then
-        echo "R installed successfully......"
+        echo "R installed successfully."
     else
-        echo "R installation failed......"
+        echo "R installation failed."
+        echo "If your system is one of 'Fedora', 'CentOS'  and 'RHEL', please see: https://cloud.r-project.org/, for more information."
         exit 1
     fi
 }
@@ -71,9 +103,9 @@ install_r() {
 # Function to check if R is installed
 check_r_packages_installed() {
     if command -v R >/dev/null 2>&1; then
-        echo "R is already installed......"
+        echo "R is already installed."
     else
-        echo "R is not installed......"
+        echo "R is not installed."
         install_r
     fi
 }
@@ -103,10 +135,10 @@ install_dependence() {
 
       for package in "${required_packages[@]}"; do
           if ! dpkg -l | grep -q "ii  $package"; then
-              echo "Installing $package......"
+              echo "Installing $package."
               apt-get install -y "$package"
           else
-              echo "$package is already installed......"
+              echo "$package is already installed."
           fi
       done
   }
@@ -139,10 +171,10 @@ install_dependence() {
 
       for package in "${required_packages[@]}"; do
           if ! rpm -q "$package" &>/dev/null; then
-              echo "Installing $package......"
+              echo "Installing $package."
               yum install -y "$package"
           else
-              echo "$package is already installed......"
+              echo "$package is already installed."
           fi
       done
   }
@@ -173,7 +205,7 @@ install_dependence() {
               echo "Installing $package..."
               pacman -S --noconfirm "$package"
           else
-              echo "$package is already installed......"
+              echo "$package is already installed."
           fi
       done
   }
@@ -183,15 +215,15 @@ install_dependence() {
       source /etc/os-release
       case $ID in
           debian|ubuntu)
-              echo "Detected Debian/Ubuntu system......"
+              echo "Detected Debian/Ubuntu system."
               install_ubuntu_packages
               ;;
           fedora|centos|rhel)
-              echo "Detected Red Hat/CentOS/Fedora system......"
+              echo "Detected Red Hat/CentOS/Fedora system."
               install_redhat_packages
               ;;
           arch)
-              echo "Detected Arch Linux system......"
+              echo "Detected Arch Linux system."
               install_arch_packages
               ;;
           *)
@@ -200,23 +232,23 @@ install_dependence() {
               ;;
       esac
   else
-      echo "Unsupported operating system......"
+      echo "Unsupported operating system."
       exit 1
   fi
 
-  echo "All required packages installed successfully......"
+  echo "All required packages installed successfully."
 }
 
 # Function to install RStudio Server if not already installed
 install_rstudio_server() {
     echo "Checking if RStudio Server is already installed..."
     if systemctl is-active rstudio-server &> /dev/null; then
-        echo "RStudio Server is already installed......"
-        echo "Skipping installation......"
+        echo "RStudio Server is already installed."
+        echo "Skipping installation."
         return
     fi
 
-    echo "Installing RStudio Server......"
+    echo "Installing RStudio Server."
     # Get the system information
     os=$(uname -s)
 
@@ -225,7 +257,7 @@ install_rstudio_server() {
         Linux*)
             if [ -f /etc/lsb-release ] || [ -f /etc/debian_version ]; then
                 # Ubuntu system
-                echo "Ubuntu or Debian system......"
+                echo "Ubuntu or Debian system."
                 apt-get install r-base
                 apt-get install -y gdebi-core # Install gdebi-core for dependency handling
                 wget https://download2.rstudio.org/server/focal/amd64/rstudio-server-2023.06.2-561-amd64.deb
@@ -233,14 +265,14 @@ install_rstudio_server() {
                 rm rstudio-server-2023.06.2-561-amd64.deb
             elif [ -f /etc/fedora-release ]; then
                 # Fedora system
-                echo "Fedora system......"
+                echo "Fedora system."
                 dnf install -y wget
                 wget https://download2.rstudio.org/server/centos7/x86_64/rstudio-server-rhel-2023.06.2-561-x86_64.rpm
                 yum install rstudio-server-rhel-2023.06.2-561-x86_64.rpm
                 rm rstudio-server-rhel-2023.06.2-561-x86_64.rpm
             elif [ -f /etc/SuSE-release ] || [ -f /etc/openSUSE-release ]; then
                 # OpenSuse system
-                echo "OpenSuse system......"
+                echo "OpenSuse system."
                 zypper --non-interactive in -y wget
                 zypper install libgfortran43
                 wget https://download2.rstudio.org/server/opensuse15/x86_64/rstudio-server-2023.06.2-561-x86_64.rpm
@@ -248,12 +280,12 @@ install_rstudio_server() {
                 rm rstudio-server-2023.06.2-561-x86_64.rpm
             elif [ -f /etc/centos-release ]; then
                 # CentOS system
-                echo "CentOS system......"
+                echo "CentOS system."
                 wget https://download2.rstudio.org/server/centos7/x86_64/rstudio-server-rhel-2023.06.2-561-x86_64.rpm
                 yum install rstudio-server-rhel-2023.06.2-561-x86_64.rpm
                 rm rstudio-server-rhel-2023.06.2-561-x86_64.rpm
             else
-                echo "Unsupported Linux distribution......"
+                echo "Unsupported Linux distribution."
                 exit 1
             fi
             ;;
@@ -265,9 +297,9 @@ install_rstudio_server() {
 
     # Check if RStudio Server was installed successfully
     if systemctl is-active rstudio-server &> /dev/null; then
-        echo "RStudio Server installed successfully......"
+        echo "RStudio Server installed successfully."
     else
-        echo "RStudio Server installation failed......"
+        echo "RStudio Server installation failed."
         exit 1
     fi
 }
@@ -283,9 +315,9 @@ install_packages() {
 
     # # Install 'stringi'
     # if is_package_installed "stringi"; then
-    #     echo "'stringi' is already installed......"
+    #     echo "'stringi' is already installed."
     # else
-    #     echo "Installing stringi......"
+    #     echo "Installing stringi."
     #     git clone https://github.com/gagolews/stringi.git
     #     cd stringi
     #     R CMD INSTALL .
@@ -320,18 +352,18 @@ install_packages() {
 
     # Install 'devtools'
     if is_package_installed "devtools"; then
-        echo "'devtools' is already installed......"
+        echo "'devtools' is already installed."
     else
-        echo "Installing devtools......"
+        echo "Installing devtools."
         Rscript -e "install.packages("devtools", repos = 'https://cloud.r-project.org')"
     fi
 
     # Install 'digest'
   	# Note: the package 'digest' may encounter errors during the installation process on the macOS system of M1/M2 chip machines
     if is_package_installed "digest"; then
-        echo "'digest' is already installed......"
+        echo "'digest' is already installed."
     else
-        echo "Installing digest......"
+        echo "Installing digest."
         Rscript -e "install.packages("digest", repos = c("https://eddelbuettel.r-universe.dev", "https://cloud.r-project.org"))"
     fi
 
@@ -347,9 +379,9 @@ install_packages() {
 
     # Install "ComplexHeatmap" using BiocManager
     if is_package_installed "ComplexHeatmap"; then
-        echo "'ComplexHeatmap' is already installed......"
+        echo "'ComplexHeatmap' is already installed."
     else
-        echo "Installing 'ComplexHeatmap'......"
+        echo "Installing 'ComplexHeatmap'."
         Rscript -e "BiocManager::install('ComplexHeatmap')"
     fi
 

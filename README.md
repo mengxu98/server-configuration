@@ -12,23 +12,23 @@ cd server-configuration
 ### If you want to only install and intallize the R and RStudio server for server
 
 ``` bash
-bash requirements.sh
+sudo bash requirements.sh
 ```
 
 ### If you want to install and intallize the clash
 
 ``` bash
-bash clash.sh
+sudo bash clash.sh
 ```
 
 ### If you want to download data from the GEO database
 
 ``` bash
-bash GEO_data_download.sh GEO_ID
+bash GEO_data_download.sh GEO_ID # such as: bash GEO_data_download.sh GEO123456
 ```
 
 ### If you want to use [*tabby*](https://github.com/eugeny/tabby) terminal instead of the default terminal
 
 ```bash
-bash tabby_installation.sh
+sudo bash tabby_installation.sh
 ```

@@ -1,25 +1,63 @@
 #!/bin/bash
 
-# Ref: https://zhuanlan.zhihu.com/p/627482865?utm_id=0
-# This script used to download GEO data
-# usage:
-#	bash GEO_data_download.sh GEO_ID
-# example
-#       bash GEO_data_download.sh GEO168408
+# The raw script was refence from: https://zhuanlan.zhihu.com/p/627482865?utm_id=0
+# This script is used to download GEO data
+# Usage:
+#   bash GEO_data_download.sh [-S|--silent] [GEO_ID]
+# Example:
+#   bash GEO_data_download.sh GEO168408
+#   bash GEO_data_download.sh -S GEO168408
 
-# Check GEO_ID
+# Default values
+silent=false
 
-if [ -z "$1" ]
+# Function to check if a command is available
+command_exists() {
+    command -v "$1" &> /dev/null
+}
+
+# Parse command line options
+while [[ "$#" -gt 0 ]]; do
+    case "$1" in
+        -S|--silent)
+            silent=true
+            shift
+            ;;
+        *)
+            if [ -z "$geo_id" ]; then
+                geo_id="$1"
+            else
+                echo "Error: Unknown argument '$1'"
+                exit 1
+            fi
+            shift
+            ;;
+    esac
+done
+
+# Check if GEO_ID is provided
+if [ -z "$geo_id" ]
 then
-        echo "Please provide a GSE number."
-        exit 1
+    echo "Error: Please provide a GSE number."
+    exit 1
 fi
 
-# Make a new dir in current dir, named as GEO ID
-mkdir $1
+# Create a new directory with the GEO ID
+mkdir "$geo_id"
 
-# Download file
-wget -r -nH --cut-dirs=3 ftp://ftp.ncbi.nlm.nih.gov/geo/series/${1: 0:-3}nnn/$1/
+# Define additional wget options for silent or non-silent download
+wget_options="-r -nH --cut-dirs=3 --timeout=600 --progress=dot"
+if $silent; then
+    wget_options="$wget_options -q"
+fi
 
-# Output information if successed download
-echo "The data: $1 successed download."
+# Use nohup to run wget in the background with output redirected to a log file if in silent mode
+if $silent; then
+    nohup wget $wget_options "ftp://ftp.ncbi.nlm.nih.gov/geo/series/${geo_id:0:-3}nnn/${geo_id}/" > "${geo_id}/${geo_id}_download.log" 2>&1 &
+    echo "The data download for '${geo_id}' is running silently in the background."
+    echo "Check '${geo_id}_download.log' for progress."
+    echo "The '${geo_id}_download.log' file is in the directory '${geo_id}'."
+else
+    wget $wget_options "ftp://ftp.ncbi.nlm.nih.gov/geo/series/${geo_id:0:-3}nnn/${geo_id}/"
+    echo "The '${geo_id}' successed download."
+fi
