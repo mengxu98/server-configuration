@@ -16,78 +16,78 @@ install_r() {
 
     # Execute different installation commands based on the detected system
     case "$os" in
-        Linux*)
-            if [ -f /etc/lsb-release ]; then
-                # Ubuntu system
-                echo "Ubuntu system."
-                # apt-get update
-                # apt-get install -y r-base
+    Linux*)
+        if [ -f /etc/lsb-release ]; then
+            # Ubuntu system
+            echo "Ubuntu system."
+            # apt-get update
+            # apt-get install -y r-base
 
-                # Reference: https://cloud.r-project.org/
-                # update indices
-                apt update -qq
-                # install two helper packages need
-                apt install --no-install-recommends software-properties-common dirmngr
-                # add the signing key (by Michael Rutter) for these repos
-                # To verify key, run gpg --show-keys /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc 
-                # Fingerprint: E298A3A825C0D65DFD57CBB651716619E084DAB9
-                wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
-                # add the R 4.0 repo from CRAN -- adjust 'focal' to 'groovy' or 'bionic' as needed
-                add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
+            # Reference: https://cloud.r-project.org/
+            # update indices
+            apt update -qq
+            # install two helper packages need
+            apt install --no-install-recommends software-properties-common dirmngr
+            # add the signing key (by Michael Rutter) for these repos
+            # To verify key, run gpg --show-keys /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
+            # Fingerprint: E298A3A825C0D65DFD57CBB651716619E084DAB9
+            wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
+            # add the R 4.0 repo from CRAN -- adjust 'focal' to 'groovy' or 'bionic' as needed
+            add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
 
-                # install R and its dependencies
-                apt install --no-install-recommends r-base
+            # install R and its dependencies
+            apt install --no-install-recommends r-base
 
-                # Run this command to add the current R 4.0 or later ‘c2d4u’ repository:
-                add-apt-repository ppa:c2d4u.team/c2d4u4.0+
+            # Run this command to add the current R 4.0 or later ‘c2d4u’ repository:
+            add-apt-repository ppa:c2d4u.team/c2d4u4.0+
 
-            elif [ -f /etc/debian_version ]; then
-                # Debian system
-                echo "Debian system."
-                # apt-get update
-                # apt-get install -y r-base
+        elif [ -f /etc/debian_version ]; then
+            # Debian system
+            echo "Debian system."
+            # apt-get update
+            # apt-get install -y r-base
 
-                # Reference: https://cloud.r-project.org/
-                apt search "^r-.*" | sort
-                apt update
-                apt install r-base r-base-dev
-                apt rdepends r-base-core
+            # Reference: https://cloud.r-project.org/
+            apt search "^r-.*" | sort
+            apt update
+            apt install r-base r-base-dev
+            apt rdepends r-base-core
 
-            elif [ -f /etc/fedora-release ]; then
-                # Fedora system
-                echo "Fedora system."
-                dnf install -y R
+        elif [ -f /etc/fedora-release ]; then
+            # Fedora system
+            echo "Fedora system."
+            dnf install -y R
 
-            elif [ -f /etc/arch-release ]; then
-                # Arch Linux system
-                echo "Arch Linux system."
-                pacman -S --noconfirm r
+        elif [ -f /etc/arch-release ]; then
+            # Arch Linux system
+            echo "Arch Linux system."
+            pacman -S --noconfirm r
 
-            elif [ -f /etc/SuSE-release ] || [ -f /etc/openSUSE-release ]; then
-                # OpenSuse system
-                echo "OpenSuse system."
-                zypper --non-interactive in -y R
+        elif [ -f /etc/SuSE-release ] || [ -f /etc/openSUSE-release ]; then
+            # OpenSuse system
+            echo "OpenSuse system."
+            zypper --non-interactive in -y R
 
-            elif [ -f /etc/centos-release ]; then
-                # CentOS system
-                echo "CentOS system."
-                yum install -y epel-release
-                yum install -y R
-            
-            elif [ -f /etc/gentoo-release ]; then
-                # Gentoo system
-                echo "Gentoo system."
-                emerge --ask dev-lang/R
+        elif [ -f /etc/centos-release ]; then
+            # CentOS system
+            echo "CentOS system."
+            yum install -y epel-release
+            yum install -y R
 
-            else
-                echo "Unsupported Linux distribution."
-                exit 1
-            fi
-            ;;
-        *)
-            echo "Unsupported operating system: $os"
+        elif [ -f /etc/gentoo-release ]; then
+            # Gentoo system
+            echo "Gentoo system."
+            emerge --ask dev-lang/R
+
+        else
+            echo "Unsupported Linux distribution."
             exit 1
-            ;;
+        fi
+        ;;
+    *)
+        echo "Unsupported operating system: $os"
+        exit 1
+        ;;
     esac
 
     # Check if R was installed successfully
@@ -111,138 +111,138 @@ check_r_packages_installed() {
 }
 
 install_dependence() {
-  # Function to install packages for Debian/Ubuntu systems
-  install_ubuntu_packages() {
-      required_packages=(
-          libcurl4-openssl-dev
-          libxml2-dev
-          libfontconfig1-dev
-          libharfbuzz-dev
-          libfribidi-dev
-          libfreetype6-dev
-          libpng-dev
-          libtiff5-dev
-          libjpeg-dev
-          libgdal-dev
-          libgeos-dev
-          libproj-dev
-          libgmp-dev
-          libmpfr-dev
-          libclang-dev
-          cmake
-          libmagick++-dev
-      )
+    # Function to install packages for Debian/Ubuntu systems
+    install_ubuntu_packages() {
+        required_packages=(
+            libcurl4-openssl-dev
+            libxml2-dev
+            libfontconfig1-dev
+            libharfbuzz-dev
+            libfribidi-dev
+            libfreetype6-dev
+            libpng-dev
+            libtiff5-dev
+            libjpeg-dev
+            libgdal-dev
+            libgeos-dev
+            libproj-dev
+            libgmp-dev
+            libmpfr-dev
+            libclang-dev
+            cmake
+            libmagick++-dev
+        )
 
-      for package in "${required_packages[@]}"; do
-          if ! dpkg -l | grep -q "ii  $package"; then
-              echo "Installing $package."
-              apt-get install -y "$package"
-          else
-              echo "$package is already installed."
-          fi
-      done
-  }
+        for package in "${required_packages[@]}"; do
+            if ! dpkg -l | grep -q "ii  $package"; then
+                echo "Installing $package."
+                apt-get install -y "$package"
+            else
+                echo "$package is already installed."
+            fi
+        done
+    }
 
-  # Function to install packages for Red Hat/CentOS/Fedora systems
-  install_redhat_packages() {
-      required_packages=(
-          libcurl-devel
-          libxml2-devel
-          fontconfig-devel
-          harfbuzz-devel
-          fribidi-devel
-          freetype-devel
-          libpng-devel
-          libtiff-devel
-          libjpeg-devel
-          gdal-devel
-          geos-devel
-          proj-devel
-          gmp-devel
-          mpfr-devel
-          clang-devel
-          cmake
-          ImageMagick-c++-devel
-      )
+    # Function to install packages for Red Hat/CentOS/Fedora systems
+    install_redhat_packages() {
+        required_packages=(
+            libcurl-devel
+            libxml2-devel
+            fontconfig-devel
+            harfbuzz-devel
+            fribidi-devel
+            freetype-devel
+            libpng-devel
+            libtiff-devel
+            libjpeg-devel
+            gdal-devel
+            geos-devel
+            proj-devel
+            gmp-devel
+            mpfr-devel
+            clang-devel
+            cmake
+            ImageMagick-c++-devel
+        )
 
-      wget http://security.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.19_amd64.deb
-      dpkg -i  libssl1.1_1.1.1f-1ubuntu2.19_amd64.deb
-      rm libssl1.1_1.1.1f-1ubuntu2.17_amd64.deb
+        wget http://security.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.19_amd64.deb
+        dpkg -i libssl1.1_1.1.1f-1ubuntu2.19_amd64.deb
+        rm libssl1.1_1.1.1f-1ubuntu2.17_amd64.deb
 
-      for package in "${required_packages[@]}"; do
-          if ! rpm -q "$package" &>/dev/null; then
-              echo "Installing $package."
-              yum install -y "$package"
-          else
-              echo "$package is already installed."
-          fi
-      done
-  }
+        for package in "${required_packages[@]}"; do
+            if ! rpm -q "$package" &>/dev/null; then
+                echo "Installing $package."
+                yum install -y "$package"
+            else
+                echo "$package is already installed."
+            fi
+        done
+    }
 
-  # Function to install packages for Arch Linux
-  install_arch_packages() {
-      required_packages=(
-          curl
-          libxml2
-          fontconfig
-          harfbuzz
-          libfreetype2
-          libpng
-          libtiff
-          libjpeg-turbo
-          gdal
-          geos
-          proj
-          gmp
-          mpfr
-          clang
-          cmake
-          imagemagick
-      )
+    # Function to install packages for Arch Linux
+    install_arch_packages() {
+        required_packages=(
+            curl
+            libxml2
+            fontconfig
+            harfbuzz
+            libfreetype2
+            libpng
+            libtiff
+            libjpeg-turbo
+            gdal
+            geos
+            proj
+            gmp
+            mpfr
+            clang
+            cmake
+            imagemagick
+        )
 
-      for package in "${required_packages[@]}"; do
-          if ! pacman -Q "$package" &>/dev/null; then
-              echo "Installing $package..."
-              pacman -S --noconfirm "$package"
-          else
-              echo "$package is already installed."
-          fi
-      done
-  }
+        for package in "${required_packages[@]}"; do
+            if ! pacman -Q "$package" &>/dev/null; then
+                echo "Installing $package..."
+                pacman -S --noconfirm "$package"
+            else
+                echo "$package is already installed."
+            fi
+        done
+    }
 
-  # Detect the Linux distribution and call the appropriate function
-  if [ -f /etc/os-release ]; then
-      source /etc/os-release
-      case $ID in
-          debian|ubuntu)
-              echo "Detected Debian/Ubuntu system."
-              install_ubuntu_packages
-              ;;
-          fedora|centos|rhel)
-              echo "Detected Red Hat/CentOS/Fedora system."
-              install_redhat_packages
-              ;;
-          arch)
-              echo "Detected Arch Linux system."
-              install_arch_packages
-              ;;
-          *)
-              echo "Unsupported Linux distribution: $ID"
-              exit 1
-              ;;
-      esac
-  else
-      echo "Unsupported operating system."
-      exit 1
-  fi
+    # Detect the Linux distribution and call the appropriate function
+    if [ -f /etc/os-release ]; then
+        source /etc/os-release
+        case $ID in
+        debian | ubuntu)
+            echo "Detected Debian/Ubuntu system."
+            install_ubuntu_packages
+            ;;
+        fedora | centos | rhel)
+            echo "Detected Red Hat/CentOS/Fedora system."
+            install_redhat_packages
+            ;;
+        arch)
+            echo "Detected Arch Linux system."
+            install_arch_packages
+            ;;
+        *)
+            echo "Unsupported Linux distribution: $ID"
+            exit 1
+            ;;
+        esac
+    else
+        echo "Unsupported operating system."
+        exit 1
+    fi
 
-  echo "All required packages installed successfully."
+    echo "All required packages installed successfully."
 }
 
 # Function to install RStudio Server if not already installed
 install_rstudio_server() {
     echo "Checking if RStudio Server is already installed..."
-    if systemctl is-active rstudio-server &> /dev/null; then
+    if systemctl is-active rstudio-server &>/dev/null; then
         echo "RStudio Server is already installed."
         echo "Skipping installation."
         return
@@ -254,49 +254,49 @@ install_rstudio_server() {
 
     # Execute different installation commands based on the detected system
     case "$os" in
-        Linux*)
-            if [ -f /etc/lsb-release ] || [ -f /etc/debian_version ]; then
-                # Ubuntu system
-                echo "Ubuntu or Debian system."
-                apt-get install r-base
-                apt-get install -y gdebi-core # Install gdebi-core for dependency handling
-                wget https://download2.rstudio.org/server/focal/amd64/rstudio-server-2023.06.2-561-amd64.deb
-                gdebi rstudio-server-2023.06.2-561-amd64.deb
-                rm rstudio-server-2023.06.2-561-amd64.deb
-            elif [ -f /etc/fedora-release ]; then
-                # Fedora system
-                echo "Fedora system."
-                dnf install -y wget
-                wget https://download2.rstudio.org/server/centos7/x86_64/rstudio-server-rhel-2023.06.2-561-x86_64.rpm
-                yum install rstudio-server-rhel-2023.06.2-561-x86_64.rpm
-                rm rstudio-server-rhel-2023.06.2-561-x86_64.rpm
-            elif [ -f /etc/SuSE-release ] || [ -f /etc/openSUSE-release ]; then
-                # OpenSuse system
-                echo "OpenSuse system."
-                zypper --non-interactive in -y wget
-                zypper install libgfortran43
-                wget https://download2.rstudio.org/server/opensuse15/x86_64/rstudio-server-2023.06.2-561-x86_64.rpm
-                zypper install rstudio-server-2023.06.2-561-x86_64.rpm
-                rm rstudio-server-2023.06.2-561-x86_64.rpm
-            elif [ -f /etc/centos-release ]; then
-                # CentOS system
-                echo "CentOS system."
-                wget https://download2.rstudio.org/server/centos7/x86_64/rstudio-server-rhel-2023.06.2-561-x86_64.rpm
-                yum install rstudio-server-rhel-2023.06.2-561-x86_64.rpm
-                rm rstudio-server-rhel-2023.06.2-561-x86_64.rpm
-            else
-                echo "Unsupported Linux distribution."
-                exit 1
-            fi
-            ;;
-        *)
-            echo "Unsupported operating system: $os"
+    Linux*)
+        if [ -f /etc/lsb-release ] || [ -f /etc/debian_version ]; then
+            # Ubuntu system
+            echo "Ubuntu or Debian system."
+            apt-get install r-base
+            apt-get install -y gdebi-core # Install gdebi-core for dependency handling
+            wget https://download2.rstudio.org/server/focal/amd64/rstudio-server-2023.06.2-561-amd64.deb
+            gdebi rstudio-server-2023.06.2-561-amd64.deb
+            rm rstudio-server-2023.06.2-561-amd64.deb
+        elif [ -f /etc/fedora-release ]; then
+            # Fedora system
+            echo "Fedora system."
+            dnf install -y wget
+            wget https://download2.rstudio.org/server/centos7/x86_64/rstudio-server-rhel-2023.06.2-561-x86_64.rpm
+            yum install rstudio-server-rhel-2023.06.2-561-x86_64.rpm
+            rm rstudio-server-rhel-2023.06.2-561-x86_64.rpm
+        elif [ -f /etc/SuSE-release ] || [ -f /etc/openSUSE-release ]; then
+            # OpenSuse system
+            echo "OpenSuse system."
+            zypper --non-interactive in -y wget
+            zypper install libgfortran43
+            wget https://download2.rstudio.org/server/opensuse15/x86_64/rstudio-server-2023.06.2-561-x86_64.rpm
+            zypper install rstudio-server-2023.06.2-561-x86_64.rpm
+            rm rstudio-server-2023.06.2-561-x86_64.rpm
+        elif [ -f /etc/centos-release ]; then
+            # CentOS system
+            echo "CentOS system."
+            wget https://download2.rstudio.org/server/centos7/x86_64/rstudio-server-rhel-2023.06.2-561-x86_64.rpm
+            yum install rstudio-server-rhel-2023.06.2-561-x86_64.rpm
+            rm rstudio-server-rhel-2023.06.2-561-x86_64.rpm
+        else
+            echo "Unsupported Linux distribution."
             exit 1
-            ;;
+        fi
+        ;;
+    *)
+        echo "Unsupported operating system: $os"
+        exit 1
+        ;;
     esac
 
     # Check if RStudio Server was installed successfully
-    if systemctl is-active rstudio-server &> /dev/null; then
+    if systemctl is-active rstudio-server &>/dev/null; then
         echo "RStudio Server installed successfully."
     else
         echo "RStudio Server installation failed."
@@ -322,7 +322,7 @@ install_packages() {
     #     cd stringi
     #     R CMD INSTALL .
     # fi
-    
+
     cd ..
 
     # List of required packages
@@ -359,7 +359,7 @@ install_packages() {
     fi
 
     # Install 'digest'
-  	# Note: the package 'digest' may encounter errors during the installation process on the macOS system of M1/M2 chip machines
+    # Note: the package 'digest' may encounter errors during the installation process on the macOS system of M1/M2 chip machines
     if is_package_installed "digest"; then
         echo "'digest' is already installed."
     else

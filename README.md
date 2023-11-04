@@ -1,6 +1,7 @@
 # *server-configuration*
 
 A repo for server configuration tasks.
+Note: some scripts now only could run on the Ubuntu systems.
 
 ## Usage
 
@@ -18,7 +19,7 @@ sudo bash requirements.sh
 ### If you want to install and intallize the clash
 
 ``` bash
-sudo bash clash.sh
+sudo bash clash_setting.sh
 ```
 
 ### If you want to download data from the GEO database

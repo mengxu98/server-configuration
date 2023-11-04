@@ -34,7 +34,7 @@ sudo systemctl status xrdp
 sudo adduser xrdp ssl-cert
 sudo systemctl restart xrdp
 
-# git 
+# git
 sudo apt update
 sudo apt install git
 

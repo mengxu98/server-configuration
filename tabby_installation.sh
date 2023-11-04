@@ -4,8 +4,7 @@
 # Reference: https://github.com/eugeny/tabby
 # Reference: https://packagecloud.io/eugeny/tabby/install#bash-deb
 
-unknown_os ()
-{
+unknown_os() {
   echo "Unfortunately, your operating system distribution and version are not supported by this script."
   echo
   echo "You can override the OS detection by setting os= and dist= prior to running this script."
@@ -17,10 +16,9 @@ unknown_os ()
   exit 1
 }
 
-gpg_check ()
-{
+gpg_check() {
   echo "Checking for gpg..."
-  if command -v gpg > /dev/null; then
+  if command -v gpg >/dev/null; then
     echo "Detected gpg..."
   else
     echo "Installing gnupg for GPG verification..."
@@ -33,10 +31,9 @@ gpg_check ()
   fi
 }
 
-curl_check ()
-{
+curl_check() {
   echo "Checking for curl..."
-  if command -v curl > /dev/null; then
+  if command -v curl >/dev/null; then
     echo "Detected curl..."
   else
     echo "Installing curl..."
@@ -49,19 +46,16 @@ curl_check ()
   fi
 }
 
-install_debian_keyring ()
-{
+install_debian_keyring() {
   if [ "${os,,}" = "debian" ]; then
     echo "Installing debian-archive-keyring which is needed for installing "
     echo "apt-transport-https on many Debian systems."
-    apt-get install -y debian-archive-keyring &> /dev/null
+    apt-get install -y debian-archive-keyring &>/dev/null
   fi
 }
 
-
-detect_os ()
-{
-  if [[ ( -z "${os}" ) && ( -z "${dist}" ) ]]; then
+detect_os() {
+  if [[ (-z "${os}") && (-z "${dist}") ]]; then
     # some systems dont have lsb-release yet have the lsb_release binary and
     # vice-versa
     if [ -e /etc/lsb-release ]; then
@@ -69,7 +63,7 @@ detect_os ()
 
       if [ "${ID}" = "raspbian" ]; then
         os=${ID}
-        dist=`cut --delimiter='.' -f1 /etc/debian_version`
+        dist=$(cut --delimiter='.' -f1 /etc/debian_version)
       else
         os=${DISTRIB_ID}
         dist=${DISTRIB_CODENAME}
@@ -79,18 +73,18 @@ detect_os ()
         fi
       fi
 
-    elif [ `which lsb_release 2>/dev/null` ]; then
-      dist=`lsb_release -c | cut -f2`
-      os=`lsb_release -i | cut -f2 | awk '{ print tolower($1) }'`
+    elif [ $(which lsb_release 2>/dev/null) ]; then
+      dist=$(lsb_release -c | cut -f2)
+      os=$(lsb_release -i | cut -f2 | awk '{ print tolower($1) }')
 
     elif [ -e /etc/debian_version ]; then
       # some Debians have jessie/sid in their /etc/debian_version
       # while others have '6.0.7'
-      os=`cat /etc/issue | head -1 | awk '{ print tolower($1) }'`
+      os=$(cat /etc/issue | head -1 | awk '{ print tolower($1) }')
       if grep -q '/' /etc/debian_version; then
-        dist=`cut --delimiter='/' -f1 /etc/debian_version`
+        dist=$(cut --delimiter='/' -f1 /etc/debian_version)
       else
-        dist=`cut --delimiter='.' -f1 /etc/debian_version`
+        dist=$(cut --delimiter='.' -f1 /etc/debian_version)
       fi
 
     else
@@ -109,18 +103,16 @@ detect_os ()
   echo "Detected operating system as $os/$dist."
 }
 
-detect_apt_version ()
-{
-  apt_version_full=`apt-get -v | head -1 | awk '{ print $2 }'`
-  apt_version_major=`echo $apt_version_full | cut -d. -f1`
-  apt_version_minor=`echo $apt_version_full | cut -d. -f2`
+detect_apt_version() {
+  apt_version_full=$(apt-get -v | head -1 | awk '{ print $2 }')
+  apt_version_major=$(echo $apt_version_full | cut -d. -f1)
+  apt_version_minor=$(echo $apt_version_full | cut -d. -f2)
   apt_version_modified="${apt_version_major}${apt_version_minor}0"
 
   echo "Detected apt version as ${apt_version_full}"
 }
 
-main ()
-{
+main() {
   detect_os
   curl_check
   gpg_check
@@ -129,7 +121,7 @@ main ()
   # Need to first run apt-get update so that apt-transport-https can be
   # installed
   echo -n "Running apt-get update... "
-  apt-get update &> /dev/null
+  apt-get update &>/dev/null
   echo "done."
 
   # Install the debian-archive-keyring package on debian systems so that
@@ -137,9 +129,8 @@ main ()
   install_debian_keyring
 
   echo -n "Installing apt-transport-https... "
-  apt-get install -y apt-transport-https &> /dev/null
+  apt-get install -y apt-transport-https &>/dev/null
   echo "done."
-
 
   gpg_key_url="https://packagecloud.io/eugeny/tabby/gpgkey"
   apt_config_url="https://packagecloud.io/install/repositories/eugeny/tabby/config_file.list?os=${os}&dist=${dist}&source=script"
@@ -150,12 +141,12 @@ main ()
     install -d -m 0755 "$apt_keyrings_dir"
   fi
   gpg_keyring_path="$apt_keyrings_dir/eugeny_tabby-archive-keyring.gpg"
-    gpg_key_path_old="/etc/apt/trusted.gpg.d/eugeny_tabby.gpg"
+  gpg_key_path_old="/etc/apt/trusted.gpg.d/eugeny_tabby.gpg"
 
   echo -n "Installing $apt_source_path..."
 
   # create an apt config file for this repository
-  curl -sSf "${apt_config_url}" > $apt_source_path
+  curl -sSf "${apt_config_url}" >$apt_source_path
   curl_exit_code=$?
 
   if [ "$curl_exit_code" = "22" ]; then
@@ -200,7 +191,7 @@ main ()
 
   echo -n "Importing packagecloud gpg key... "
   # import the gpg key
-  curl -fsSL "${gpg_key_url}" | gpg --dearmor > ${gpg_keyring_path}
+  curl -fsSL "${gpg_key_url}" | gpg --dearmor >${gpg_keyring_path}
   # grant 644 permisions to gpg keyring path
   chmod 0644 "${gpg_keyring_path}"
 
@@ -213,7 +204,7 @@ main ()
     chmod 0644 "${gpg_key_path_old}"
 
     # deletes the keyrings directory if it is empty
-    if ! ls -1qA $apt_keyrings_dir | grep -q .;then
+    if ! ls -1qA $apt_keyrings_dir | grep -q .; then
       rm -r $apt_keyrings_dir
     fi
     echo "Packagecloud gpg key imported to ${gpg_key_path_old}"
@@ -224,7 +215,7 @@ main ()
 
   echo -n "Running apt-get update... "
   # update apt on this system
-  apt-get update &> /dev/null
+  apt-get update &>/dev/null
   echo "done."
 
   echo

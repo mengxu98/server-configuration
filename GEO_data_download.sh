@@ -13,31 +13,31 @@ silent=false
 
 # Function to check if a command is available
 command_exists() {
-    command -v "$1" &> /dev/null
+    command -v "$1" &>/dev/null
 }
 
 # Parse command line options
 while [[ "$#" -gt 0 ]]; do
     case "$1" in
-        -S|--silent)
-            silent=true
-            shift
-            ;;
-        *)
-            if [ -z "$geo_id" ]; then
-                geo_id="$1"
-            else
-                echo "Error: Unknown argument '$1'"
-                exit 1
-            fi
-            shift
-            ;;
+    -S | --silent)
+        silent=true
+        shift
+        ;;
+    *)
+
+        if [ -z "$geo_id" ]; then
+            geo_id="$1"
+        else
+            echo "Error: Unknown argument '$1'"
+            exit 1
+        fi
+        shift
+        ;;
     esac
 done
 
-# Check if GEO_ID is provided
-if [ -z "$geo_id" ]
-then
+Check if GEO_ID is provided
+if [ -z "$geo_id" ]; then
     echo "Error: Please provide a GSE number."
     exit 1
 fi
@@ -53,7 +53,7 @@ fi
 
 # Use nohup to run wget in the background with output redirected to a log file if in silent mode
 if $silent; then
-    nohup wget $wget_options "ftp://ftp.ncbi.nlm.nih.gov/geo/series/${geo_id:0:-3}nnn/${geo_id}/" > "${geo_id}/${geo_id}_download.log" 2>&1 &
+    nohup wget $wget_options "ftp://ftp.ncbi.nlm.nih.gov/geo/series/${geo_id:0:-3}nnn/${geo_id}/" >"${geo_id}/${geo_id}_download.log" 2>&1 &
     echo "The data download for '${geo_id}' is running silently in the background."
     echo "Check '${geo_id}_download.log' for progress."
     echo "The '${geo_id}_download.log' file is in the directory '${geo_id}'."
