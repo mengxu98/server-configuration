@@ -2,6 +2,11 @@
 
 # Reference: https://blog.cyida.com/2023/24ANW6D.html
 
+# Function to log messages
+log() {
+  echo "$(date +'%Y-%m-%d %H:%M:%S') - $1"
+}
+
 # Function to check if a command is available
 command_exists() {
     command -v "$1" &>/dev/null
@@ -13,10 +18,11 @@ else
     password="$1"
 fi
 
-echo "Starting"
+log "-----------------------"
+log "Start 'clash' set."
 
-echo "Settings system proxy as figure 'softwares/clash/clash**.png'"
-echo "Copy necessary files to '~/.config/clash/'"
+log "Settings system proxy as figure 'softwares/clash/clash_setting.png'"
+log "Copy necessary files to '~/.config/clash/'"
 sudo cat softwares/clash/config.yaml >../.config/clash/config.yaml
 sudo chmod 777 ../.config/clash/config.yaml
 sudo cp softwares/clash/Country.mmdb ../.config/clash/Country.mmdb
@@ -39,8 +45,7 @@ echo "${password}" | sudo -S modprobe gs_usb
 #     echo "Port 7890 is not in use."
 # fi
 
-cd ~
-./clash/clash
+/opt/clash/clash
 
 EOF
 
@@ -116,5 +121,5 @@ sudo systemctl enable clash_running.service
 sudo systemctl start clash_running.service
 sudo systemctl restart clash_running.service
 
-echo "-----------------------"
-echo "Successfully set clash."
+log "'clash' set completed."
+log "-----------------------"
