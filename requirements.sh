@@ -33,7 +33,15 @@ install_r() {
             # Fingerprint: E298A3A825C0D65DFD57CBB651716619E084DAB9
             wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
             # add the R 4.0 repo from CRAN -- adjust 'focal' to 'groovy' or 'bionic' as needed
-            add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
+
+            # Reference: https://blog.csdn.net/tiansyun/article/details/131255627
+            # sudo cp /etc/apt/sources.list /etc/apt/sources.list.backup
+            # sudo nano /etc/apt/sources.list
+            # add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
+            add-apt-repository "deb http://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse"
+            add-apt-repository "deb http://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse"
+            add-apt-repository "deb http://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse"
+            add-apt-repository "deb http://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse"
 
             # install R and its dependencies
             apt install --no-install-recommends r-base
