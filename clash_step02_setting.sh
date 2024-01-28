@@ -23,10 +23,10 @@ log "Start 'clash' set."
 
 log "Settings system proxy as figure 'softwares/clash/clash_setting.png'"
 log "Copy necessary files to '~/.config/clash/'"
-sudo cat softwares/clash/config.yaml >../.config/clash/config.yaml
-sudo chmod 777 ../.config/clash/config.yaml
-sudo cp softwares/clash/Country.mmdb ../.config/clash/Country.mmdb
-sudo chmod 777 ../.config/clash/Country.mmdb
+sudo cat softwares/clash/config.yaml >~/.config/clash/config.yaml
+sudo chmod 777 ~/.config/clash/config.yaml
+sudo cp softwares/clash/Country.mmdb ~/.config/clash/Country.mmdb
+sudo chmod 777 ~/.config/clash/Country.mmdb
 
 # Write following test into a script name 'clash_running.sh':
 sudo cat <<EOF > /etc/clash_running

@@ -19,7 +19,8 @@ sudo bash requirements.sh
 ### If you want to install and intallize the clash
 
 ``` bash
-sudo bash clash_setting.sh
+sudo bash clash_step01_installation.sh
+sudo bash clash_step02_setting.sh
 ```
 
 ### If you want to download data from the GEO database

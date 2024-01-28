@@ -29,7 +29,7 @@ clash_dir="/opt/clash"
 # Check if the 'clash' directory exists and create it if it doesn't
 if [ ! -d "$clash_dir" ]; then
     log "Creating 'clash' directory."
-    mkdir "$clash_dir"
+    sudo mkdir "$clash_dir"
 fi
 
 # Change permissions of the 'clash' directory
