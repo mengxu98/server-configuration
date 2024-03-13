@@ -19,35 +19,43 @@ install_r() {
     Linux*)
         if [ -f /etc/lsb-release ]; then
             # Ubuntu system
-            echo "Ubuntu system."
-            # apt-get update
-            # apt-get install -y r-base
+            echo "Installing r for Ubuntu system."
 
-            # Reference: https://cloud.r-project.org/
-            # update indices
-            apt update -qq
-            # install two helper packages need
-            apt install --no-install-recommends software-properties-common dirmngr
-            # add the signing key (by Michael Rutter) for these repos
-            # To verify key, run gpg --show-keys /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
-            # Fingerprint: E298A3A825C0D65DFD57CBB651716619E084DAB9
-            wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
-            # add the R 4.0 repo from CRAN -- adjust 'focal' to 'groovy' or 'bionic' as needed
+            # # Release version
+            # # Reference: https://cloud.r-project.org/
+            # # update indices
+            # apt update -qq
+            # # install two helper packages need
+            # apt install --no-install-recommends software-properties-common dirmngr
+            # # add the signing key (by Michael Rutter) for these repos
+            # # To verify key, run gpg --show-keys /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
+            # # Fingerprint: E298A3A825C0D65DFD57CBB651716619E084DAB9
+            # wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
+            # # add the R 4.0 repo from CRAN -- adjust 'focal' to 'groovy' or 'bionic' as needed
 
             # Reference: https://blog.csdn.net/tiansyun/article/details/131255627
             # sudo cp /etc/apt/sources.list /etc/apt/sources.list.backup
             # sudo nano /etc/apt/sources.list
             # add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
-            add-apt-repository "deb http://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse"
-            add-apt-repository "deb http://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse"
-            add-apt-repository "deb http://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse"
-            add-apt-repository "deb http://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse"
+            # add-apt-repository "deb http://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse"
+            # add-apt-repository "deb http://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse"
+            # add-apt-repository "deb http://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse"
+            # add-apt-repository "deb http://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse"
 
-            # install R and its dependencies
-            apt install --no-install-recommends r-base
+            # # install R and its dependencies
+            # apt install --no-install-recommends r-base
 
-            # Run this command to add the current R 4.0 or later ‘c2d4u’ repository:
-            add-apt-repository ppa:c2d4u.team/c2d4u4.0+
+            # # Run this command to add the current R 4.0 or later ‘c2d4u’ repository:
+            # # add-apt-repository ppa:c2d4u.team/c2d4u4.0+
+
+            # # Devel version
+            sudo apt update
+            sudo apt upgrade
+            sudo sh -c 'echo "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/" >> /etc/apt/sources.list'
+            sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+            sudo apt update
+            sudo apt install r-base
+            sudo apt install r-base-dev
 
         elif [ -f /etc/debian_version ]; then
             # Debian system
