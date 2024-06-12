@@ -13,7 +13,7 @@ cd server-configuration
 ### If you want to only install and intallize the R and RStudio server for server
 
 ``` bash
-sudo bash requirements.sh
+sudo bash r-environment_requirements.sh
 ```
 
 ### If you want to install and intallize the clash

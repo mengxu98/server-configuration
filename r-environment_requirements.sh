@@ -276,7 +276,8 @@ install_rstudio_server() {
             echo "Ubuntu or Debian system."
             apt-get install r-base
             apt-get install -y gdebi-core # Install gdebi-core for dependency handling
-            wget https://download2.rstudio.org/server/focal/amd64/rstudio-server-2023.06.2-561-amd64.deb
+            #wget https://download2.rstudio.org/server/focal/amd64/rstudio-server-2023.06.2-561-amd64.deb
+            wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2024.04.1-748-amd64.deb
             gdebi rstudio-server-2023.06.2-561-amd64.deb
             rm rstudio-server-2023.06.2-561-amd64.deb
         elif [ -f /etc/fedora-release ]; then
