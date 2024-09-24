@@ -1,7 +1,5 @@
 # *server-configuration*
-
-A repo for server configuration tasks.
-Note: some scripts now only could run on the Ubuntu systems.
+This repository contains the scripts for installing and configuring the server environment.
 
 ## Usage
 
@@ -16,21 +14,18 @@ cd server-configuration
 sudo bash r-environment_requirements.sh
 ```
 
-### If you want to install and intallize the clash
+### If you want to install/remove the clash
 
 ``` bash
+# install clash
 sudo bash clash_step01_installation.sh
 sudo bash clash_step02_setting.sh
+# remove clash
+sudo bash clash_step03_remove.sh
 ```
 
 ### If you want to download data from the GEO database
 
 ``` bash
 bash GEO_data_download.sh GEO_ID # such as: bash GEO_data_download.sh GEO123456
-```
-
-### If you want to use [*tabby*](https://github.com/eugeny/tabby) terminal instead of the default terminal
-
-```bash
-sudo bash tabby_installation.sh
 ```
